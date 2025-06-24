@@ -16,8 +16,7 @@
 #   limitations under the License.
 #  =========================================================================  #
 
-from ._parent_sim_classes import Simulator
-from . import sim_class_types
+from ._parent_sim_classes import BaseSim
 
 from ._sparsesim import SparseSim as pySparseSim  # Python sparse stabilizer sim
 from ._paulifaultprop import PauliFaultProp  # Pauli fault propagation sim

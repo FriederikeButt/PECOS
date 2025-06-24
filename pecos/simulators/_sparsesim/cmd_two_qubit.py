@@ -577,6 +577,7 @@ def SqrtXX2(state: SparseSim,
     Returns: None
 
     """
+    
     qubit1, qubit2 = qubits
     Q(state, qubit1)  # Sqrt X
     Q(state, qubit2)  # Sqrt X

@@ -333,25 +333,13 @@ void swap_gen_mod(Generators& gen, const int_num& qubit1,
     
 }
 
-unsigned int State::measure(const int_num& qubit, int forced_outcome=-1, bool collapse=true) {
+unsigned int State::measure(const int_num& qubit, int force=-1) {
 
     if (stabs.col_x[qubit].size() == 0) {  // There are no anticommuting stabilizers
         return deterministic_measure(qubit);
     } else {
-
-        if (collapse) {
-            return nondeterministic_measure(qubit, forced_outcome);
-        } else {
-
-            if ((forced_outcome == 0) || (forced_outcome == 1)) {
-                return forced_outcome;
-            } else if (forced_outcome == -1) {
-                return random_outcome();
-            } else {
-                throw std::invalid_argument( "forced_outcome was not 0, 1, or -1" );
-            }
-
-        }
+        return nondeterministic_measure(qubit, force);
+        // return 1;
     }
 
 }
@@ -413,7 +401,8 @@ unsigned int State::deterministic_measure(const int_num& qubit) {
 
 }
 
-unsigned int State::nondeterministic_measure(const int_num& qubit, int forced_outcome=-1) {
+unsigned int State::nondeterministic_measure(const int_num& qubit,  
+                                             int force=-1) {
     // Here at least one stabilizer anticommutes with the measured stabilizer.
     // Therefore, we will have to update the stabilizers and destabilizers.
     
@@ -619,15 +608,13 @@ unsigned int State::nondeterministic_measure(const int_num& qubit, int forced_ou
      
     destabs.row_x[removed_id] = removed_row_x;
     destabs.row_z[removed_id] = removed_row_z;
-
-    if ((forced_outcome == 0) || (forced_outcome == 1)) {
-        meas_outcome = forced_outcome;
-    } else if (forced_outcome == -1) {
+    
+    if (force == -1) {
         meas_outcome = random_outcome();
     } else {
-        throw std::invalid_argument( "forced_outcome was not 0, 1, or -1" );
+        meas_outcome = force;
     }
-
+      
     if (meas_outcome) {
         signs_minus.insert(removed_id);
     } else { 

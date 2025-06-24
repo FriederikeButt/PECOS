@@ -99,7 +99,7 @@ def generate_circuit(gates, num_qubits, circuit_depth):
         if element == 'CNOT':
             q = get_qubits(num_qubits, 2)
         else:
-            q = get_qubits(num_qubits, 1)[0]
+            q = int(get_qubits(num_qubits, 1))
 
         circuit.append((element, q))
 
@@ -115,7 +115,7 @@ def run_a_circuit(num_qubits, state_rep, circuit, verbose=False):
 
         m = -1
         if element == 'measure Z':
-            m = gate_dict[element](state, q, forced_outcome=0)
+            m = gate_dict[element](state, q, random_outcome=0)
             measurements.append(m)
 
         else:

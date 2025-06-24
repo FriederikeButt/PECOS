@@ -14,15 +14,23 @@
 #   limitations under the License.
 #  =========================================================================  #
 
-from ..sim_class_types import StateVector
-import qcgpu
-from . import bindings
+from .. import BaseSim
+
+try:
+    import qcgpu
+    from . import bindings
+    has_sim = True
+
+except ModuleNotFoundError:
+    has_sim = False
 
 
-class QCQPUSim(StateVector):
+class QCQPUSim(BaseSim):
     """
     A wrapper for the qcqpu package: https://qcgpu.github.io/
     """
+
+    a = 0
 
     def __init__(self, num_qubits):
         """
@@ -34,6 +42,9 @@ class QCQPUSim(StateVector):
         Returns:
 
         """
+
+        if not has_sim:
+            raise Exception("ProjectQ must be installed to use this class.")
 
         if not isinstance(num_qubits, int):
             raise Exception('``num_qubits`` should be of type ``int.``')

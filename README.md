@@ -3,7 +3,6 @@
 
 [![PyPI version](https://badge.fury.io/py/quantum-pecos.svg)](https://badge.fury.io/py/quantum-pecos)
 [![Documentation Status](https://readthedocs.org/projects/quantum-pecos/badge/?version=latest)](https://quantum-pecos.readthedocs.io/en/latest/?badge=latest)
-[![Python Status](https://img.shields.io/badge/python-3.5.2%2C%203.6%2C%203.7-brightgreen.svg)](https://img.shields.io/badge/python-3.5.2%2C%203.6%2C%203.7-brightgreen.svg)
 
 PECOS (Performance Estimator of Codes On Surfaces) is a Python framework for studying, developing, and evaluating 
 quantum error-correction protocols.
@@ -12,24 +11,14 @@ quantum error-correction protocols.
 - Language: Python 3.5.2+ (with optional C and C++ extensions)
 
 ## Contact
+   - Ciarán Ryan-Anderson, ciaran@pecos.io
 
- For questions or suggestions, please feel free to contact the author:
- 
-   - Ciarán Ryan-Anderson, ciaran.ryan-anderson@quantinuum.com
-   
 ## Getting Started
 
-To get started, check out the documentation in the "docs" folder or find it online at:
+To get started, check out the documentation in the "docs" folder. You can also see the documentation on Read the Docs 
+here:
 
-https://quantum-pecos.readthedocs.io
-   
-## Latest Development
-
-See the following branch for the latest version of PECOS under development:
-
-https://github.com/PECOS-packages/PECOS/tree/development
-
-BEAWARE: There are some changes planned in 0.2.dev that may break some backwards compatibility with 0.1. Although, we try to minimize breaks to backwards compatibility.
+https://quantum-pecos.readthedocs.io/en/development/
 
 ## Requirements
 - Python 3.5.2+
@@ -42,11 +31,10 @@ BEAWARE: There are some changes planned in 0.2.dev that may break some backwards
 
 - Cython (to compile optional C/C++ extensions)
 - pytest 3.0+ (to run tests)
-- Sphinx 2.7.6+ (to compile documentation)
-
-## License
-
-PECOS is licensed under the [Apache 2.0 license](https://github.com/PECOS-packages/PECOS/blob/master/LICENSE)
+- Sphinx 2.7.6+ (to compile the documentation)
+- ProjectQ (for state vector simulations)
+- Cirq (to take advantage of the full quantum-state simulators made available via Cirq)
+- qcgpu (to run state vector simulations on gpus) 
 
 ## Installation
 
@@ -70,6 +58,7 @@ To install and continue to develop the version of PECOS located in the install f
 ```
 pip install -e .
 ```
+
 
 ## Uninstall
 

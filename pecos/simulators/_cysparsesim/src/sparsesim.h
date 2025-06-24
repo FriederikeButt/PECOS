@@ -22,7 +22,6 @@
 #include <vector>
 #include <unordered_set>
 
-
 using namespace std;
 
 typedef unsigned long long int_num;
@@ -93,18 +92,21 @@ class State {
         void F4d(const int_num& qubit);  // F4d
         void cnot(const int_num& tqubit, const int_num& cqubit);
         void swap(const int_num& qubit1, const int_num& qubit2);
-        unsigned int measure(const int_num& qubit, int forced_outcome, bool collapse);
+        unsigned int measure(const int_num& qubit, int force);
         
     private:
         unsigned int deterministic_measure(const int_num& qubit);
-        unsigned int nondeterministic_measure(const int_num& qubit, int forced_outcome);
+        unsigned int nondeterministic_measure(const int_num& qubit,  
+                                              int force);
 };
 
 void hadamard_gen_mod(Generators& gen, const int_num& qubit);
 void phaserot_gen_mod(Generators& gen, const int_num& qubit);
 void Q_gen_mod(Generators& gen, const int_num& qubit);
-void cnot_gen_mod(Generators& gen, const int_num& tqubit, const int_num& cqubit);
-void swap_gen_mod(Generators& gen, const int_num& qubit1, const int_num& qubit2);
+void cnot_gen_mod(Generators& gen, const int_num& tqubit, 
+                  const int_num& cqubit);
+void swap_gen_mod(Generators& gen, const int_num& qubit1, 
+                  const int_num& qubit2);
 void F1_gen_mod(Generators& gen, const int_num& qubit);
 void F2_gen_mod(Generators& gen, const int_num& qubit);
 unsigned int random_outcome(void);

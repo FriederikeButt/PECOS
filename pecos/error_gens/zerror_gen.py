@@ -110,7 +110,7 @@ class ZGen(ParentErrorGen):
         if has_idle_errors:
             self.gen.set_gate_error('idle', zerror.error_func)
 
-    def start(self, circuit, error_params):
+    def start(self, circuit, error_params, state):
         """
         Start up at the beginning of a circuit simulation.
 

@@ -43,20 +43,20 @@ Date        Author  Comment
 """
 from typing import Any, Union, Set, Tuple, List, Optional
 from ...circuits import QuantumCircuit
-from ..sim_class_types import Stabilizer
+from .. import BaseSim
 from . import bindings
 from .logical_sign import find_logical_signs
 from .refactor import refactor as refactor_generators
 from .refactor import find_stab as find_stabilizer
 
 
-class SparseSim(Stabilizer):
+class SparseSim(BaseSim):
     """
     Represents the stabilizer state.
 
     Attributes:
         num_qubits (int):
-        bindings (dict):
+        gate_dict (dict):
         stabs (Gens):
         destabs (Gens):
         gens (Tuple[Gens, Gens]):
@@ -417,7 +417,50 @@ class SparseSim(Stabilizer):
             result.append(''.join(stab_letters))
 
         return result
-
+  
+    def is_one(self,
+                qubit: int) -> float:
+        """returns the probability of measuring 1 within the stabilizer 
+        simulation formalism, meaning that the result can be 0, 1 or 1/2"""
+    
+        stabs = self.stabs
+        destabs = self.destabs
+    
+        # stabs_test = deepcopy(gens)
+    
+        anticom_stabs_col = stabs.col_x[qubit]
+        anticom_destabs_col = destabs.col_x[qubit]
+    
+        if len(anticom_stabs_col) == 0:  # There is no anticommuting element.
+    
+            # DETERMINE STATE!
+            # ===============
+    
+            stabs_row_x = stabs.row_x
+            stabs_row_z = stabs.row_z
+    
+            num_minuses = len(anticom_destabs_col & stabs.signs_minus)
+            num_is = len(anticom_destabs_col & stabs.signs_i)
+    
+            # Sign correction due ZX -> -XZ
+            cumulative_x = set([])
+            for row in anticom_destabs_col:
+                num_minuses += len(stabs_row_z[row] & cumulative_x)
+    
+                # Update the row sum Paulis
+                cumulative_x ^= stabs_row_x[row]
+    
+            if num_is % 4:  # Can only be 0 or 2
+                num_minuses += 1
+    
+            meas_outcome = num_minuses % 2
+    
+            return meas_outcome   # 1 or 0
+    
+        else:
+            return 0.5
+    
+    
 
 class Gens(object):
     """
@@ -597,3 +640,48 @@ class Gens(object):
             result.append(''.join(stab_letters))
 
         return result
+    
+    def is_one(self,
+                qubit: int) -> float:
+        """returns the probability of measuring 1 within the stabilizer 
+        simulation formalism, meaning that the result can be 0, 1 or 1/2"""
+    
+        stabs = self.stabs
+        destabs = self.destabs
+    
+        # stabs_test = deepcopy(gens)
+    
+        anticom_stabs_col = stabs.col_x[qubit]
+        anticom_destabs_col = destabs.col_x[qubit]
+    
+        if len(anticom_stabs_col) == 0:  # There is no anticommuting element.
+    
+            # DETERMINE STATE!
+            # ===============
+    
+            stabs_row_x = stabs.row_x
+            stabs_row_z = stabs.row_z
+    
+            num_minuses = len(anticom_destabs_col & stabs.signs_minus)
+            num_is = len(anticom_destabs_col & stabs.signs_i)
+    
+            # Sign correction due ZX -> -XZ
+            cumulative_x = set([])
+            for row in anticom_destabs_col:
+                num_minuses += len(stabs_row_z[row] & cumulative_x)
+    
+                # Update the row sum Paulis
+                cumulative_x ^= stabs_row_x[row]
+    
+            if num_is % 4:  # Can only be 0 or 2
+                num_minuses += 1
+    
+            meas_outcome = num_minuses % 2
+    
+            return meas_outcome   # 1 or 0
+    
+        else:
+            return 0.5
+    
+    
+    

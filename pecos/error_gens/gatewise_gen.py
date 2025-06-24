@@ -68,7 +68,7 @@ class GatewiseGen(ParentErrorGen):
         self.ErrorSet = self.gen.ErrorSet
         self.ErrorSetTwoQuditTensorProduct = self.gen.ErrorSetTwoQuditTensorProduct
 
-    def start(self, circuit, error_params):
+    def start(self, circuit, error_params, state):
         """
         Start up at the beginning of a circuit simulation.
 

@@ -20,8 +20,9 @@ from typing import Tuple
 import cmath
 import numpy as np
 from projectq import ops
-from projectq.ops import BasicRotationGate
+from projectq.ops import BasicRotationGate, BasicGate
 from .gates_one_qubit import Q, R, Rd, H
+from .helper import MakeFunc
 
 
 def II(state,
@@ -58,6 +59,21 @@ def CZ(state,
     q2 = state.qids[qubits[1]]
 
     ops.C(ops.Z) | (q1, q2)
+    
+def CH(state,
+         qubits: Tuple[int, int]) -> None:
+    q1 = state.qids[qubits[0]]
+    q2 = state.qids[qubits[1]]
+
+    ops.C(ops.H) | (q1, q2)
+
+    
+def Ctest(state,
+         qubits: Tuple[int, int]) -> None:
+    q1 = state.qids[qubits[0]]
+    q2 = state.qids[qubits[1]]
+
+    ops.C(ops.test) | (q1, q2)
 
 
 def CY(state,

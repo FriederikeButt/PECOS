@@ -52,8 +52,8 @@ def init_one(state: SparseSim,
 
     """
 
-    if not meas_z(state, qubit, 1):
-        X(state, qubit)
+    init_zero(state, qubit)
+    X(state, qubit)
 
 
 def init_plus(state: SparseSim,

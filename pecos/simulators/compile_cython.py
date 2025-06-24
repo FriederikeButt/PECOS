@@ -20,7 +20,8 @@ import os
 import subprocess
 
 
-def compile():
+def main():
+
     # See if Cython has been installed...
     # try:
     #     import cython
@@ -47,6 +48,13 @@ def compile():
         if p.returncode:
             failed[d] = error
 
+    return failed, cython_dirs
+
+
+if __name__ == '__main__':
+
+    failed, cython_dirs = main()
+
     successful = set(cython_dirs) - set(failed.keys())
 
     if successful:
@@ -70,7 +78,3 @@ def compile():
             print('--------------')
 
         print('\nRecommend compiling separately those that failed.')
-
-
-if __name__ == '__main__':
-    compile()

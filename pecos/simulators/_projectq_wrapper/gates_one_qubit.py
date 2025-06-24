@@ -158,6 +158,7 @@ S = MakeFunc(ops.S).func
 Sd = MakeFunc(ops.Sdag).func
 
 
+
 class H2Gate(BasicGate):
     """Hadmard-like gate #2"""
     @property
@@ -179,6 +180,7 @@ class H3Gate(BasicGate):
 
     def __str__(self):
         return "H3"
+    
 
 
 H3 = MakeFunc(H3Gate()).func
@@ -277,3 +279,47 @@ class F4Gate(BasicGate):
 
 F4 = MakeFunc(F4Gate()).func
 F4d = MakeFunc(get_inverse(F4Gate())).func
+
+
+class T_XGate(BasicGate):
+    """pi/4 rotation about the X-axis"""
+    @property
+    def matrix(self):
+        angle = np.pi/4
+        return np.matrix([[1 + np.exp(1j*angle)  , 1 - np.exp(1j*angle)], [1 - np.exp(1j*angle) , 1 + np.exp(1j*angle)  ]]) *1/2
+
+    def __str__(self):
+        return "T_X"
+
+
+T_X = MakeFunc(T_XGate()).func
+T_Xd = MakeFunc(get_inverse(T_XGate())).func
+
+
+class T_YGate(BasicGate):
+    """pi/4 rotation about the Y-axis"""
+    
+    @property
+    def matrix(self):
+        angle = np.pi/4
+        return np.matrix([[np.cos(angle/2) -1j*np.sin(angle/2), 0], [0, np.cos(angle/2)-1j*np.sin(angle/2)]])
+
+    def __str__(self):
+        return "T_Y"
+
+
+T_Y = MakeFunc(T_YGate()).func
+T_Yd = MakeFunc(get_inverse(T_YGate())).func
+
+class test_gate(BasicGate):
+
+    @property
+    def matrix(self):
+        return np.matrix([[1, 0], [0,np.exp(1j*np.pi/4)]])/np.sqrt(2)
+
+    def __str__(self):
+        return "test"
+
+
+test = MakeFunc(test_gate()).func
+testd = MakeFunc(get_inverse(test_gate())).func

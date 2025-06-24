@@ -16,4 +16,4 @@
 #   limitations under the License.
 #  =========================================================================  #
 
-from .cysparsesim import SparseSim
+from .cysparsesim import State

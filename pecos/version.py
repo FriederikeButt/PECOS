@@ -19,11 +19,10 @@
 #  =========================================================================  #
 
 __author__ = 'Ciarán Ryan-Anderson'
-__copyright__ = ('2018 The PECOS Developers. 2018 National Technology & Engineering Solutions of Sandia, LLC (NTESS). '
-                 'Under the terms of Contract DE-NA0003525 with NTESS, the U.S. Government retains certain rights in '
-                 'this software')
+__copyright__ = '2018 National Technology & Engineering Solutions of Sandia, LLC (NTESS). Under the terms ' \
+                'of Contract DE-NA0003525 with NTESS, the U.S. Government retains certain rights in this software'
 __credits__ = ['Ciarán Ryan-Anderson', ]
 __license__ = 'Apache 2'
-__version__ = '0.2.0'
+__version__ = '0.2.dev'
 __maintainer__ = 'Ciarán Ryan-Anderson'
-__email__ = 'ciaran@pecos.io'  # or ciaran.ryan-anderson@quantinuum.com
+__email__ = 'ciaran@pecos.io'

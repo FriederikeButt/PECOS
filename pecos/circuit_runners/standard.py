@@ -63,8 +63,7 @@ class Standard(object):
             output = StdOutput()
 
         # TODO: Generate errors before running the ticks
-
-        # TODO: Add maps...
+        # TODO: Have the option of not applying the circuit if no error...
 
         # Initialize errors...
         # --------------------
@@ -78,7 +77,7 @@ class Standard(object):
         else:  # new errors
 
             generate_errors = True
-            error_circuits = error_gen.start(circuit, error_params)
+            error_circuits = error_gen.start(circuit, error_params, state)
 
         # run through the circuits...
         # ---------------------------
@@ -91,6 +90,7 @@ class Standard(object):
                 errors = {}
             else:
                 if generate_errors:
+
                     error_circuits = error_gen.generate_tick_errors(tick_circuit, time, **params)
                 errors = error_circuits.get(time, {})
 

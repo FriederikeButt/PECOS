@@ -16,15 +16,127 @@
 #   limitations under the License.
 #  =========================================================================  #
 
-from typing import Set, Optional
+from typing import Set
 import numpy as np
 from .state import SparseSim
 from .cmd_one_qubit import H, H5
 
 
+def leak(state: SparseSim,
+         qubit: int,
+         p_leak: float,
+         ) -> int:
+
+    r = np.random.random()
+
+    if r <= p_leak:  # leak unless |0>
+
+        if is_zero(state, qubit):
+            return 0
+        else:
+            # Project to |0> and signal that the state has (should) leak
+            meas = meas_z(state, qubit, random_outcome=0)  # Will collapse state if possible to |0>
+
+            # if state is already |1> flip it to |0>
+            if meas:
+                X(state, qubit)
+            return 1
+
+    else:
+        return 0  # not leaked
+
+def is_zero(state: SparseSim,
+            qubit: int) -> bool:
+    """Whether the state is |0>.
+    returns true if the state is 0, and false otherwise"""
+
+    stabs = state.stabs
+    destabs = state.destabs
+
+    # stabs_test = deepcopy(gens)
+
+    anticom_stabs_col = stabs.col_x[qubit]
+    anticom_destabs_col = destabs.col_x[qubit]
+
+    if len(anticom_stabs_col) == 0:  # There is no anticommuting element.
+
+        # DETERMINE STATE!
+        # ===============
+
+        stabs_row_x = stabs.row_x
+        stabs_row_z = stabs.row_z
+
+        num_minuses = len(anticom_destabs_col & stabs.signs_minus)
+        num_is = len(anticom_destabs_col & stabs.signs_i)
+
+        # Sign correction due ZX -> -XZ
+        cumulative_x = set([])
+        for row in anticom_destabs_col:
+            num_minuses += len(stabs_row_z[row] & cumulative_x)
+
+            # Update the row sum Paulis
+            cumulative_x ^= stabs_row_x[row]
+
+        if num_is % 4:  # Can only be 0 or 2
+            num_minuses += 1
+
+        meas_outcome = num_minuses % 2
+
+        return meas_outcome == 0  # True if == 0, else False
+
+    else:
+        return False
+
+
+def is_one(state: SparseSim,
+            qubit: int) -> float:
+    """returns the probability of measuring 1 within the stabilizer 
+    simulation formalism, meaning that the result can be 0, 1 or 1/2"""
+
+    stabs = state.stabs
+    destabs = state.destabs
+
+    # stabs_test = deepcopy(gens)
+
+    anticom_stabs_col = stabs.col_x[qubit]
+    anticom_destabs_col = destabs.col_x[qubit]
+
+    if len(anticom_stabs_col) == 0:  # There is no anticommuting element.
+
+        # DETERMINE STATE!
+        # ===============
+
+        stabs_row_x = stabs.row_x
+        stabs_row_z = stabs.row_z
+
+        num_minuses = len(anticom_destabs_col & stabs.signs_minus)
+        num_is = len(anticom_destabs_col & stabs.signs_i)
+
+        # Sign correction due ZX -> -XZ
+        cumulative_x = set([])
+        for row in anticom_destabs_col:
+            num_minuses += len(stabs_row_z[row] & cumulative_x)
+
+            # Update the row sum Paulis
+            cumulative_x ^= stabs_row_x[row]
+
+        if num_is % 4:  # Can only be 0 or 2
+            num_minuses += 1
+
+        meas_outcome = num_minuses % 2
+
+        return meas_outcome   # 1 or 0
+
+    else:
+        return 0.5
+
+
+
+
+
 def meas_x(state: SparseSim,
            qubit: int,
-           forced_outcome: int = -1,
+           random_outcome: int = -1,
            collapse: bool = True) -> int:
     """
     Measurement in the X basis.
@@ -32,7 +144,7 @@ def meas_x(state: SparseSim,
     Args:
         state (SparseSim): Instance representing the stabilizer state.
         qubit (int): Integer that indexes the qubit being acted on.
-        forced_outcome (int):  Integer that will be outputted by the measurement if the measurement is
+        random_outcome (int):  Integer that will be outputted by the measurement if the measurement is
             non-deterministic. If equal to -1, however, the outcome will be uniformly chosen from {0, 1}.
         collapse (bool): Whether state should be collapsed.
 
@@ -42,16 +154,15 @@ def meas_x(state: SparseSim,
 
     H(state, qubit)
 
-    meas_outcome = meas_z(state, qubit, forced_outcome, collapse)
+    meas_outcome = meas_z(state, qubit, random_outcome, collapse)
 
     H(state, qubit)
 
     return meas_outcome
 
-
 def meas_y(state: SparseSim,
            qubit: int,
-           forced_outcome: int = -1,
+           random_outcome: int = -1,
            collapse: bool = True) -> int:
     """
     Measurement in the Y basis.
@@ -59,7 +170,7 @@ def meas_y(state: SparseSim,
     Args:
         state (SparseSim): Instance representing the stabilizer state.
         qubit (int): Integer that indexes the qubit being acted on.
-        forced_outcome (int):  Integer that will be outputted by the measurement if the measurement is
+        random_outcome (int):  Integer that will be outputted by the measurement if the measurement is
             non-deterministic. If equal to -1, however, the outcome will be uniformly chosen from {0, 1}.
         collapse (bool): Whether to collapse the state if measurement is not already determined.
 
@@ -69,7 +180,7 @@ def meas_y(state: SparseSim,
 
     H5(state, qubit)
 
-    meas_outcome = meas_z(state, qubit, forced_outcome, collapse)
+    meas_outcome = meas_z(state, qubit, random_outcome, collapse)
 
     H5(state, qubit)
 
@@ -78,14 +189,14 @@ def meas_y(state: SparseSim,
 
 def meas_z(state: SparseSim,
            qubit: int,
-           forced_outcome: int = -1,
+           random_outcome: int = -1,
            collapse: bool = True) -> int:
     """
 
     Args:
         state (SparseSim): Instance representing the stabilizer state.
         qubit (int): Integer that indexes the qubit being acted on.
-        forced_outcome (int):  Integer that will be outputted by the measurement if the measurement is
+        random_outcome (int):  Integer that will be outputted by the measurement if the measurement is
             non-deterministic. If equal to -1, however, the outcome will be uniformly chosen from {0, 1}.
         collapse (bool): Whether to collapse the state if measurement is not already determined.
 
@@ -128,17 +239,17 @@ def meas_z(state: SparseSim,
         meas_outcome = num_minuses % 2
 
     else:  # There is at least one anti-commuting stabilizer. => indetermined sign
-
+       
         if collapse:
-            return nondeterministic_meas(state, qubit, anticom_stabs_col, anticom_destabs_col, forced_outcome)
+            return nondeterministic_meas(state, qubit, anticom_stabs_col, anticom_destabs_col, random_outcome)
 
         else:
-            if forced_outcome is not None:
+            if random_outcome is not None:
 
-                if forced_outcome == 0 or forced_outcome == 1:
-                    meas_outcome = forced_outcome
+                if random_outcome == 0 or random_outcome == 1:
+                    meas_outcome = random_outcome
                 else:
-                    raise Exception('forced_outcome can only be 0 or 1 and not %s' % forced_outcome)
+                    raise Exception('random_outcome can only be 0 or 1 and not %s' % random_outcome)
             else:
                 meas_outcome = np.random.randint(2)
 
@@ -149,7 +260,7 @@ def nondeterministic_meas(state: SparseSim,
                           qubit: int,
                           anticom_stabs_col: Set[int],
                           anticom_destabs_col: Set[int],
-                          forced_outcome: int) -> int:
+                          random_outcome: int) -> int:
     """
 
     Args:
@@ -157,7 +268,7 @@ def nondeterministic_meas(state: SparseSim,
         qubit (int): Integer that indexes the qubit being acted on.
         anticom_stabs_col (Set[int]):
         anticom_destabs_col (Set[int]):
-        forced_outcome (int):  Integer that will be outputted by the measurement if the measurement is
+        random_outcome (int):  Integer that will be outputted by the measurement if the measurement is
             non-deterministic. If equal to -1, however, the outcome will be uniformly chosen from {0, 1}.
 
     Returns:
@@ -300,13 +411,11 @@ def nondeterministic_meas(state: SparseSim,
     # Measurements
     # ---------------------------------------------------------------------
 
-    if forced_outcome is not None:
+    if random_outcome > -1:
+        meas_outcome = random_outcome
 
-        if forced_outcome == 0 or forced_outcome == 1:
-            meas_outcome = forced_outcome
-        else:
-            raise Exception('forced_outcome can only be 0 or 1 and not %s' % forced_outcome)
     else:
+        # Choose random measurement result
         meas_outcome = np.random.randint(2)
 
     # Use the random outcome as the sign of the replaced stabilizer

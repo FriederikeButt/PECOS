@@ -40,16 +40,12 @@ try:
 except FileNotFoundError:
     pass
 
-# compiler_flags = ["-std=c++11", "-Wall", "-fPIC", "-O2", "-O3", "-c", ]
-compiler_flags = ["-std=c++11", "-W3", "-fPIC", "-O2", "-O3", "-c", ]
+compiler_flags = ["-std=c++11", "-Wall", "-fPIC", "-O2", "-O3", "-c", ]
 
 ext_modules = [
     Extension('cysparsesim',
-              sources=[
-                  "src/cysparsesim.pyx",
-                  "src/sparsesim.cpp",
-                  "src/logical_sign.py",
-              ],
+              sources=["src/cysparsesim.pyx", "src/sparsesim.cpp", 
+                       "src/logical_sign.py"],
               language='c++',
               extra_compile_args=compiler_flags,
               include_dirs=['./src'],
@@ -59,19 +55,14 @@ ext_modules = [
 
 
 for e in ext_modules:
-    e.cython_directives = {
-        'boundscheck': False,
-        'wraparound': False,
-    }
+    e.cython_directives = {'boundscheck': False, 'wraparound': False}
 
 
 setup(
     name="state",
-    ext_modules=cythonize(ext_modules, build_dir="build", language_level=3),
+    ext_modules=cythonize(ext_modules, build_dir="build"),
     script_args=['build_ext'],
-    options={
-        'build_ext': {'inplace': True},
-    }
+    options={'build_ext': {'inplace': True}}
 
 )
 

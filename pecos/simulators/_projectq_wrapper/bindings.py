@@ -37,9 +37,9 @@ gate_dict = {
     'PhaseRot': MakeFunc(ops.R, angle=True).func,  # Phase-shift: Same as Rz but with a 1 in upper left of matrix.
     'TOFFOLI': MakeFunc(ops.Toffoli).func,
     'CRZ': MakeFunc(ops.CRz, angle=True).func,  # Controlled-Rz gate
-    'CRX': MakeFunc(ops.C(ops.Rx, 1), angle=True).func,  # Controlled-Rx
-    'CRY': MakeFunc(ops.C(ops.Ry, 1), angle=True).func,  # Controlled-Ry
-
+    'CRX': MakeFunc(ops.C(ops.Rx), angle=True).func,  # Controlled-Rx
+    'CRY': MakeFunc(ops.C(ops.Ry), angle=True).func,  # Controlled-Ry
+    
     'RXX': gates_two_qubit.RXX,
     'RYY': gates_two_qubit.RYY,
     'RZZ': gates_two_qubit.RZZ,
@@ -63,12 +63,24 @@ gate_dict = {
     'Z': gates_one_qubit.Z,  # -x+z
 
     # Square root of Paulis
-    'Q': gates_one_qubit.Q,    # +x-y  sqrt of X
+    'Q': gates_one_qubit.Q,    # +x-y sqrt of X
     'Qd': gates_one_qubit.Qd,  # +x+y sqrt of X dagger
     'R': gates_one_qubit.R,    # -z+x sqrt of Y
     'Rd': gates_one_qubit.Rd,  # +z-x sqrt of Y dagger
     'S': gates_one_qubit.S,    # +y+z sqrt of Z
     'Sd': gates_one_qubit.Sd,  # -y+z sqrt of Z dagger
+    
+    #pi/4 rotation baout x axis
+    #'T_X': gates_one_qubit.T_X,
+    #'T_Xd': gates_one_qubit.T_Xd,
+    
+    #pi/4 rotation baout y axis
+    #'T_Y': gates_one_qubit.T_Y,
+    #'T_Yd': gates_one_qubit.T_Yd,
+    
+    #test
+    #'test': gates_one_qubit.test,
+    #'testd': gates_one_qubit.testd,
 
     # Hadamard-like
     'H': gates_one_qubit.H,
@@ -105,6 +117,8 @@ gate_dict = {
     'G': gates_two_qubit.G2,
     'G2': gates_two_qubit.G2,
     'II': gates_two_qubit.II,
+    'CH': gates_two_qubit.CH,
+    'Ctest': gates_two_qubit.Ctest,
 
     # Mølmer–Sørensen gates
     'SqrtXX': gates_two_qubit.SqrtXX,  # \equiv e^{+i (\pi /4)} * e^{-i (\pi /4) XX } == R(XX, pi/2)

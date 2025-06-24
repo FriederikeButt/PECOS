@@ -45,44 +45,26 @@ setup(
                 'and study of quantum error correcting codes.',
     long_description=long_description,
     long_description_content_type="text/markdown",
-
     packages=find_packages(),
-    python_requires=">=3.6",
+    python_requires='>=3.5.2',
     install_requires=[
-        "numpy>=1.15.0,<2.0",
-        "scipy>=1.1.0,<2.0",
-        "matplotlib>=2.2.0,<4.0",
-        "networkx>=2.1.0,<3.0",
-        "sortedcontainers>=2.0.0,<3.0",
+        'numpy>=1.15.0',
+        'scipy>=1.1.0',
+        'matplotlib>=2.2.0',
+        'networkx>=2.1.0',
+        'sortedcontainers>=2.0.0',
     ],
     tests_require=['pytest>=3.0.0'],
     extras_require={
-        'simulators': [
-            'cython',
-            'projectq',
-        ],
-        'all': [
-            'quantum-pecos[simulators]',
-        ],
-
+        'all': ['cirq', 'cython', 'projectq'],
+        'simulators': ['cirq', 'cython', 'projectq'],
     },
     license='Apache 2',
     classifiers=[
+        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
     ],
-)
-
-'''
-try:
-    import cython
-    # Have to have Cython already installed before running this setup file
-    # Otherwise, just run compile_cython as a script: python compile_cython.py
-    from pecos.simulators import compile_cython
-    compile_cython.compile()
-    # TODO: compile Cython directly using this setup script ... or could trigger compile at init if Cython is available
-except ImportError:
-    pass
-'''
+    )

@@ -24,7 +24,6 @@ from . import gates_init, gates_one_qubit, gates_two_qubit, gates_meas
 gate_dict = {
     # Initialization
     # ==============
-    # just removes errors:
     'init |0>': gates_init.init,
     'init |1>': gates_init.init,
     'init |+>': gates_init.init,
@@ -89,11 +88,8 @@ gate_dict = {
     'measure X': gates_meas.meas_x,
     'measure Y': gates_meas.meas_y,
     'measure Z': gates_meas.meas_z,
-
-    # Measure general operators (here... just some Pauli)
-    'measure': gates_meas.meas_pauli,
-    'check': gates_meas.meas_pauli,  # TODO: all simulators should have this... and should measure as general as possible
-
+    'measure Pauli': gates_meas.meas_pauli,
+    'Check': gates_meas.meas_pauli,
     'force output': gates_meas.force_output,
 
 }
